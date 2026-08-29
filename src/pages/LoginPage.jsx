@@ -36,8 +36,9 @@ function LoginPage() {
                 )}
 
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Usuário</label>
+                    <label htmlFor="username" className="block text-sm font-medium mb-1">Usuário</label>
                     <input
+                        id="username"
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -46,8 +47,9 @@ function LoginPage() {
                 </div>
 
                 <div className="mb-6">
-                    <label className="block text-sm font-medium mb-1">Senha</label>
+                    <label htmlFor="password" className="block text-sm font-medium mb-1">Senha</label>
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}

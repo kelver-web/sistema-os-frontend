@@ -34,8 +34,9 @@ function RegisterPage() {
         )}
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Usuário</label>
+          <label htmlFor="username" className="block text-sm font-medium mb-1">Usuário</label>
           <input
+            id="username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -44,8 +45,9 @@ function RegisterPage() {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">E-mail</label>
+          <label htmlFor="email" className="block text-sm font-medium mb-1">E-mail</label>
           <input
+            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -54,8 +56,9 @@ function RegisterPage() {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Senha</label>
+          <label htmlFor="password" className="block text-sm font-medium mb-1">Senha</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -64,8 +67,9 @@ function RegisterPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium mb-1">Confirmar senha</label>
+          <label htmlFor="passwordConfirm" className="block text-sm font-medium mb-1">Confirmar senha</label>
           <input
+            id="passwordConfirm"
             type="password"
             value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
