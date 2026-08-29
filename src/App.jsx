@@ -1,25 +1,20 @@
 import './App.css'
 import { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 
 import api from './services/api';
 
 
 function App() {
 
-  useEffect(() => {
-    api.get('/clients/')
-    .then(r => {
-      r.console.log('Sucesso: ', r.data)
-    })
-    .catch(e => {
-      console.log('Erro: ', e.response?.data)
-    })
-  }, [])
-
   return (
-    <>
-      <h1 className="text-3xl font-bold text-blue-600">Sistema OS</h1>
-    </>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   )
 }
 
