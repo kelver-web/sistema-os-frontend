@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../services/api";
 
 
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         if (!username.trim() || !password.trim()) {
@@ -16,10 +18,28 @@ function LoginPage() {
         }
 
         setError('');
+        setLoading(true);
 
-        console.log(`Login com: ${username} e ${password}`);
-        // TODO: chamar api.post('/auth/login/', ...) em outro card
-
+        try {
+            const response = await api.post('/auth/login/', {
+                username,
+                password
+            })
+            localStorage.setItem('access_token', response.data.access);
+            localStorage.setItem('refresh_token', response.data.refresh);
+            console.log('Login realizado com sucesso!');
+            // TODO: navegar para área autenticada quando AuthContext existir
+        }
+        catch (error) {
+            if (error.response?.status === 401) {
+                setError('Usuário ou senha incorretos.');
+            } else {
+                setError('Não foi possível conectar ao servidor, Tente novamente.');
+            }
+        }
+        finally {
+            setLoading(false);
+        }
     }
 
 
@@ -59,9 +79,10 @@ function LoginPage() {
 
                 <button
                     type="submit"
+                    disabled={loading}
                     className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
                 >
-                    Entrar
+                    {loading ? 'Entrando...' : 'Entrar'}
                 </button>
 
                 <p className="text-sm text-center mt-4">

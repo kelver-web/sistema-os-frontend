@@ -1,9 +1,12 @@
 // src/pages/LoginPage.test.jsx
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import LoginPage from './LoginPage'
+import api from '../services/api'
+
+vi.mock('../services/api')
 
 function renderComPrevisao() {
   return render(
@@ -14,36 +17,60 @@ function renderComPrevisao() {
 }
 
 describe('LoginPage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    localStorage.clear()
+  })
+
   it('não permite submeter o form vazio', async () => {
     const user = userEvent.setup()
     renderComPrevisao()
 
-    const botao = screen.getByRole('button', { name: /entrar/i })
-    await user.click(botao)
+    await user.click(screen.getByRole('button', { name: /entrar/i }))
 
     expect(screen.getByText(/preencha todos os campos corretamente./i)).toBeInTheDocument()
+    expect(api.post).not.toHaveBeenCalled()
   })
 
-  it('não mostra erro se os campos forem preenchidos', async () => {
+  it('faz login com sucesso e guarda os tokens', async () => {
     const user = userEvent.setup()
+    api.post.mockResolvedValueOnce({
+      data: { access: 'access-fake', refresh: 'refresh-fake' },
+    })
     renderComPrevisao()
 
     await user.type(screen.getByLabelText(/usuário/i), 'joao')
     await user.type(screen.getByLabelText(/senha/i), 'senha123')
     await user.click(screen.getByRole('button', { name: /entrar/i }))
 
-    expect(screen.queryByText(/preencha usuário e senha/i)).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(localStorage.getItem('access_token')).toBe('access-fake')
+    })
+    expect(localStorage.getItem('refresh_token')).toBe('refresh-fake')
   })
 
-  it('não permite submeter com apenas espaços em branco', async () => {
+  it('mostra erro claro quando credenciais são inválidas (401)', async () => {
     const user = userEvent.setup()
+    api.post.mockRejectedValueOnce({ response: { status: 401 } })
     renderComPrevisao()
 
-    await user.type(screen.getByLabelText(/usuário/i), '   ')
-    await user.type(screen.getByLabelText(/senha/i), '   ')
+    await user.type(screen.getByLabelText(/usuário/i), 'joao')
+    await user.type(screen.getByLabelText(/senha/i), 'senhaerrada')
     await user.click(screen.getByRole('button', { name: /entrar/i }))
 
-    expect(screen.getByText(/preencha todos os campos corretamente./i)).toBeInTheDocument()
+    expect(await screen.findByText(/usuário ou senha incorretos/i)).toBeInTheDocument()
+  })
+
+  it('mostra erro genérico em falha de rede', async () => {
+    const user = userEvent.setup()
+    api.post.mockRejectedValueOnce(new Error('Network Error'))
+    renderComPrevisao()
+
+    await user.type(screen.getByLabelText(/usuário/i), 'joao')
+    await user.type(screen.getByLabelText(/senha/i), 'senha123')
+    await user.click(screen.getByRole('button', { name: /entrar/i }))
+
+    expect(await screen.findByText(/não foi possível conectar/i)).toBeInTheDocument()
   })
 
   it('exibe link para a página de registro', () => {
