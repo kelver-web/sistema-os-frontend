@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
 
@@ -8,6 +9,9 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+    const { carregarUsuario } = useAuth();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -28,7 +32,9 @@ function LoginPage() {
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
             console.log('Login realizado com sucesso!');
-            // TODO: navegar para área autenticada quando AuthContext existir
+            
+            await carregarUsuario();
+            navigate('/dashboard');
         }
         catch (error) {
             if (error.response?.status === 401) {
