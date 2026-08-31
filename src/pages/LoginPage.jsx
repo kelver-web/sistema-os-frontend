@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import api from "../services/api";
 
 
 function LoginPage() {
@@ -9,9 +8,8 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
     const navigate = useNavigate();
-    const { carregarUsuario } = useAuth();
+    const { login } = useAuth();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -25,19 +23,11 @@ function LoginPage() {
         setLoading(true);
 
         try {
-            const response = await api.post('/auth/login/', {
-                username,
-                password
-            })
-            localStorage.setItem('access_token', response.data.access);
-            localStorage.setItem('refresh_token', response.data.refresh);
-            console.log('Login realizado com sucesso!');
-            
-            await carregarUsuario();
+            await login(username, password);
             navigate('/dashboard');
         }
-        catch (error) {
-            if (error.response?.status === 401) {
+        catch (err) {
+            if (err.response?.status === 401) {
                 setError('Usuário ou senha incorretos.');
             } else {
                 setError('Não foi possível conectar ao servidor, Tente novamente.');

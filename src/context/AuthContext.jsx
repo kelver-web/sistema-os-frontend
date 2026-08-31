@@ -1,31 +1,28 @@
 // src/context/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useReducer, useEffect } from 'react'
 import api from '../services/api'
+import { authReducer, initialState } from './authReducer'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [state, dispatch] = useReducer(authReducer, initialState)
 
   async function carregarUsuario() {
     const token = localStorage.getItem('access_token')
 
     if (!token) {
-      setUser(null)
-      setLoading(false)
+      dispatch({ type: 'LOGOUT' })
       return
     }
 
     try {
       const response = await api.get('/auth/me/')
-      setUser(response.data)
+      dispatch({ type: 'SET_USER', payload: response.data })
     } catch {
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
-      setUser(null)
-    } finally {
-      setLoading(false)
+      dispatch({ type: 'LOGOUT' })
     }
   }
 
@@ -33,14 +30,25 @@ export function AuthProvider({ children }) {
     carregarUsuario()
   }, [])
 
+  async function login (username, password) {
+    const response = await api.post('/auth/login/', {
+      username,
+      password
+    })
+    localStorage.setItem('access_token', response.data.access)
+    localStorage.setItem('refresh_token', response.data.refresh)
+    const meResponse = await api.get('/auth/me/')
+    dispatch({ type: 'LOGIN', payload: meResponse.data })
+  }
+
   function logout() {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
-    setUser(null)
+    dispatch({ type: 'LOGOUT' })
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, carregarUsuario, logout }}>
+    <AuthContext.Provider value={{ user: state.user, loading: state.loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
