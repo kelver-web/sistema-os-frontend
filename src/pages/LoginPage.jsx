@@ -1,36 +1,37 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext";
 
 
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { addNotification } = useNotification();
 
     async function handleSubmit(e) {
         e.preventDefault();
 
         if (!username.trim() || !password.trim()) {
-            setError('Por favor, preencha todos os campos corretamente.');
+            addNotification('Por favor, preencha todos os campos corretamente.', 'error')
             return;
         }
 
-        setError('');
         setLoading(true);
 
         try {
             await login(username, password);
+            addNotification('Login realizado com sucesso!', 'success')
             navigate('/dashboard');
         }
         catch (err) {
             if (err.response?.status === 401) {
-                setError('Usuário ou senha incorretos.');
+                addNotification('Usuário ou senha incorretos.', 'error')
             } else {
-                setError('Não foi possível conectar ao servidor, Tente novamente.');
+                addNotification('Não foi possível conectar ao servidor. Tente novamente.', 'error')
             }
         }
         finally {
@@ -46,10 +47,6 @@ function LoginPage() {
                 className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
             >
                 <h1 className="text-2xl font-bold mb-6 text-center">Entrar</h1>
-
-                {error && (
-                    <p className="text-red-600 text-sm mb-4">{error}</p>
-                )}
 
                 <div className="mb-4">
                     <label htmlFor="username" className="block text-sm font-medium mb-1">Usuário</label>
