@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
     hidratarSessao()
   }, [])
 
-  async function login (username, password) {
+  async function login(username, password) {
     const response = await api.post('/auth/login/', {
       username,
       password
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' })
   }
 
-    console.log('Estado atual do usuário:', state.user)
+  console.log('Estado atual do usuário:', state.user)
   return (
     <AuthContext.Provider value={{ user: state.user, loading: state.loading, login, logout }}>
       {children}
