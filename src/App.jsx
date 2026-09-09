@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import NotificationToast from './components/NotificationToast'
 import { useNotification } from './context/NotificationContext'
 
+import Dashboard from './pages/Dashboard'
+
 
 function DashboardPlaceholder() {
   const { user, logout } = useAuth()
@@ -47,6 +49,7 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardPlaceholder />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
