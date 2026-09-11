@@ -7,6 +7,7 @@ import { useAuth } from './context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import NotificationToast from './components/NotificationToast'
 import { useNotification } from './context/NotificationContext'
+import ClientListPage from './pages/ClientListPage'
 
 import Dashboard from './pages/Dashboard'
 
@@ -50,6 +51,14 @@ function App() {
             <ProtectedRoute>
               <DashboardPlaceholder />
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clients"
+          element={
+            <ProtectedRoute>
+              <ClientListPage />
             </ProtectedRoute>
           }
         />
