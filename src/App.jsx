@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import NotificationToast from './components/NotificationToast'
 import { useNotification } from './context/NotificationContext'
 import ClientListPage from './pages/ClientListPage'
+import ClientFormPage from './pages/ClientFormPage'
 
 import Dashboard from './pages/Dashboard'
 
@@ -59,6 +60,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ClientListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clients/new"
+          element={
+            <ProtectedRoute>
+              <ClientFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clients/:id/edit"
+          element={
+            <ProtectedRoute>
+              <ClientFormPage />
             </ProtectedRoute>
           }
         />
