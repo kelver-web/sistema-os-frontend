@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DataTable from '../components/DataTable'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -6,11 +6,14 @@ import ConfirmDialog from '../components/ConfirmDialog'
 import { fetchClients, deleteClient } from '../services/clientsService'
 import { useNotification } from '../context/NotificationContext'
 
+
 function ClientListPage() {
   const [clients, setClients] = useState([])
   const [loading, setLoading] = useState(true)
   const [clienteParaExcluir, setClienteParaExcluir] = useState(null)
+  const [excluindo, setExcluindo] = useState(false)
   const navigate = useNavigate()
+  const excluindoRef = useRef(false)
   const { addNotification } = useNotification()
 
   async function carregarClientes() {
@@ -30,6 +33,10 @@ function ClientListPage() {
   }, [])
 
   async function handleConfirmarExclusao() {
+    if (excluindoRef.current) return
+    excluindoRef.current = true
+    setExcluindo(true)
+
     try {
       await deleteClient(clienteParaExcluir.id)
       addNotification('Cliente excluído com sucesso!', 'success')
@@ -42,6 +49,9 @@ function ClientListPage() {
         addNotification('Não foi possível excluir o cliente.', 'error')
       }
       setClienteParaExcluir(null)
+    } finally {
+      excluindoRef.current = false
+      setExcluindo(false)
     }
   }
 
@@ -121,6 +131,7 @@ function ClientListPage() {
         onClose={() => setClienteParaExcluir(null)}
         onConfirm={handleConfirmarExclusao}
         title="Excluir cliente?"
+        loading={excluindo}
         message={`Tem certeza que deseja excluir "${clienteParaExcluir?.name}"? Esta ação não pode ser desfeita.`}
       />
     </div>

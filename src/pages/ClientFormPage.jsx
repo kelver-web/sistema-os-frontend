@@ -81,6 +81,8 @@ function ClientFormPage() {
       if (err.response?.status === 400) {
         setErrors(extrairErros(err.response.data))
         addNotification('Corrija os campos destacados.', 'error')
+      } else if (!err.response) {
+        addNotification('Não foi possível conectar ao servidor. Tente novamente.', 'error')
       } else {
         addNotification('Não foi possível salvar o cliente.', 'error')
       }
