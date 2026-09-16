@@ -25,7 +25,7 @@ function LoginPage() {
         try {
             await login(username, password);
             addNotification('Login realizado com sucesso!', 'success')
-            navigate('/dashboard');
+            navigate('/clients');
         }
         catch (err) {
             if (err.response?.status === 401) {

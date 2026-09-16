@@ -100,7 +100,7 @@ function ClientFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="p-8">
       <div className="max-w-lg mx-auto">
         <h1 className="text-2xl font-bold text-slate-800 mb-6">
           {isEditMode ? 'Editar cliente' : 'Novo cliente'}
