@@ -158,14 +158,14 @@ function ClientFormPage() {
             <button
               type="button"
               onClick={() => navigate('/clients')}
-              className="px-4 py-2 border rounded hover:bg-gray-50"
+              className="px-4 py-2 border rounded hover:bg-gray-50 transition-colors text-sm cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-indigo-300"
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-indigo-300 cursor-pointer text-sm transition-colors"
             >
               {saving ? 'Salvando...' : 'Salvar'}
             </button>

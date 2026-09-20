@@ -4,6 +4,11 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useNotification } from '../context/NotificationContext'
 
+import { FaUser } from "react-icons/fa";
+import { GrTechnology } from "react-icons/gr";
+import { IoIosLogOut } from "react-icons/io";
+
+
 const navItems = [
   { to: '/clients', label: 'Clientes', roles: ['admin', 'tech', 'attendant'] },
   { to: '/equipments', label: 'Equipamentos', roles: ['admin', 'tech', 'attendant'] },
@@ -41,9 +46,8 @@ function Layout() {
       )}
 
       <aside
-        className={`fixed md:static inset-y-0 left-0 z-40 w-60 bg-white border-r border-slate-200 flex flex-col shrink-0 transition-transform duration-200 ${
-          menuAberto ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0`}
+        className={`fixed md:static inset-y-0 left-0 z-40 w-60 bg-white border-r border-slate-200 flex flex-col shrink-0 transition-transform duration-200 ${menuAberto ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0`}
       >
         <div className="px-6 py-5 border-b border-slate-200">
           <h1 className="font-bold text-slate-800">Sistema OS</h1>
@@ -56,10 +60,9 @@ function Layout() {
               to={item.to}
               onClick={handleNavClick}
               className={({ isActive }) =>
-                `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-indigo-50 text-indigo-700'
-                    : 'text-slate-600 hover:bg-slate-100'
+                `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+                  ? 'bg-indigo-50 text-indigo-700'
+                  : 'text-slate-600 hover:bg-slate-100'
                 }`
               }
             >
@@ -80,17 +83,21 @@ function Layout() {
           </button>
 
           <div className="hidden md:block" />
+          <div className="flex items-center gap-4 md:gap-6">
+            {user.username && (
+              <div className="flex items-baseline gap-2 text-slate-700 text-sm md:text-base font-medium">
+                <div>Bem vindo(a)!</div>
+                {user.role === 'tech' && <GrTechnology className="w-4 h-4 text-slate-500" />}
+                {user.role === 'admin' && <FaUser className="w-4 h-4 text-slate-500" />}
+                <span className="pascal-case">{user.username}</span>
+              </div>
+            )}
 
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-slate-800">{user?.username}</p>
-              <p className="text-xs text-slate-400 capitalize">{user?.role}</p>
-            </div>
             <button
               onClick={handleLogout}
-              className="text-sm text-red-600 hover:underline"
+              className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline transition-colors"
             >
-              Sair
+              <IoIosLogOut className="w-5 h-5 inline-block mr-1 cursor-pointer text-slate-600" title="Sair" />
             </button>
           </div>
         </header>

@@ -8,14 +8,14 @@ function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, loading = f
         <button
           onClick={onClose}
           disabled={loading}
-          className="px-4 py-2 border rounded hover:bg-gray-50"
+          className="px-4 py-2 border rounded hover:bg-gray-50 transition-colors cursor-pointer text-sm"
         >
           Cancelar
         </button>
         <button
           onClick={onConfirm}
           disabled={loading}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
         >
           {loading ? 'Excluindo...' : 'Confirmar'}
         </button>

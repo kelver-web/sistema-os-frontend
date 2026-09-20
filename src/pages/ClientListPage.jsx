@@ -6,6 +6,10 @@ import ConfirmDialog from '../components/ConfirmDialog'
 import { fetchClients, deleteClient } from '../services/clientsService'
 import { useNotification } from '../context/NotificationContext'
 
+import { FaTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+
+
 
 function ClientListPage() {
   const [clients, setClients] = useState([])
@@ -86,13 +90,13 @@ function ClientListPage() {
             onClick={() => navigate(`/clients/${row.id}/edit`)}
             className="text-sm text-indigo-600 hover:underline"
           >
-            Editar
+            <MdEdit className="w-4 h-4 cursor-pointer text-indigo-500" />
           </button>
           <button
             onClick={() => setClienteParaExcluir(row)}
             className="text-sm text-red-600 hover:underline"
           >
-            Excluir
+            <FaTrashAlt className="w-4 h-4 cursor-pointer text-red-500" />
           </button>
         </div>
       ),
