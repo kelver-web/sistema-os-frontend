@@ -15,40 +15,42 @@ function DataTable({ columns, data, pageSize = 5 }) {
 
   return (
     <div>
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-gray-100 border-b">
-            {columns.map((column) => (
-              <th key={column.key} className="text-left px-4 py-2 font-medium">
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="text-center py-6 text-gray-500">
-                Nenhum registro encontrado.
-              </td>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100 border-b">
+              {columns.map((column) => (
+                <th key={column.key} className="text-left px-4 py-2 font-medium">
+                  {column.header}
+                </th>
+              ))}
             </tr>
-          ) : (
-            paginatedData.map((row, rowIndex) => (
-              <tr key={row.id ?? rowIndex} className="border-b hover:bg-gray-50">
-                {columns.map((column) => (
-                  <td key={column.key} className="px-4 py-2">
-                    {column.render ? column.render(row) : row[column.key]}
-                  </td>
-                ))}
+          </thead>
+          <tbody>
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="text-center py-6 text-gray-500">
+                  Nenhum registro encontrado.
+                </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              paginatedData.map((row, rowIndex) => (
+                <tr key={row.id ?? rowIndex} className="border-b hover:bg-gray-50">
+                  {columns.map((column) => (
+                    <td key={column.key} className="px-4 py-2">
+                      {column.render ? column.render(row) : row[column.key]}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4">
-          <span className="text-sm text-gray-600">
+        <div className="flex items-center justify-between mt-4 gap-2 md:gap-4 px-4 py-2 border-t border-gray-200">
+          <span className="text-sm text-gray-600 font-medium">
             Página {currentPage} de {totalPages}
           </span>
           <div className="flex gap-2">
