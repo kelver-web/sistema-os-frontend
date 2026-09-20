@@ -47,7 +47,6 @@ export function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' })
   }
 
-  console.log('Estado atual do usuário:', state.user)
   return (
     <AuthContext.Provider value={{ user: state.user, loading: state.loading, login, logout }}>
       {children}
